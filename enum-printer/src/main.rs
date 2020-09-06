@@ -38,7 +38,6 @@ fn get_printers() -> Result<Vec<Printer>, Error> {
         )
     };
 
-    // とりあえずはメモリは投げ捨てるスタイルでやる
     let printer = unsafe { libc::malloc(needed as libc::size_t) as *mut PRINTER_INFO_2W };
 
     let ret: BOOL = unsafe {
@@ -54,6 +53,9 @@ fn get_printers() -> Result<Vec<Printer>, Error> {
     };
 
     if ret == 0 {
+        unsafe {
+            libc::free(printer as *mut libc::c_void);
+        }
         return Err(Error::last_os_error());
     }
 
@@ -66,6 +68,10 @@ fn get_printers() -> Result<Vec<Printer>, Error> {
             let driver_name = pwstr_to_string(it.pDriverName);
             printers.push(Printer::new(printer_name.as_str(), driver_name.as_str()));
         }
+    }
+
+    unsafe {
+        libc::free(printer as *mut libc::c_void);
     }
 
     Ok(printers)

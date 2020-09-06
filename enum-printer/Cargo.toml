@@ -8,4 +8,4 @@ edition = "2018"
 
 [dependencies]
 libc = "0.2"
-winapi = { version = "0.3", features = [ "impl-default", "minwindef", "winuser", "winspool", ] }
+winapi = { version = "0.3", features = [ "std", "impl-default", "minwindef", "winuser", "winspool", ] }
