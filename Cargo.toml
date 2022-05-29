@@ -1,0 +1,9 @@
+[workspace]
+
+members = [
+    "cpp-interop",
+    "enum-printer",
+    "meminfo",
+    "print-via-gdi",
+    "show-message-box",
+]
