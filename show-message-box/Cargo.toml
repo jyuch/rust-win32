@@ -5,4 +5,12 @@ authors = ["jyuch <jyuch@users.noreply.github.com>"]
 edition = "2021"
 
 [dependencies]
-winapi = { version = "0.3", features = [ "impl-default", "winuser", ] }
+compat = { path = "../compat" }
+
+[dependencies.windows]
+version = "0.36.1"
+features = [
+    "alloc",
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+]
