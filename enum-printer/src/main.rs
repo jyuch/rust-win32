@@ -1,14 +1,7 @@
-use compat::{pwstr_to_string, string_from_pwstr};
+use compat::string_from_pwstr;
 use std::alloc::{alloc, dealloc, Layout};
-use std::ffi::c_void;
-use std::io::Error;
-use std::ptr::{null, null_mut};
-use std::slice::from_raw_parts;
-use windows::Win32::Foundation::BOOL;
+use std::ptr::null_mut;
 use windows::Win32::Graphics::Printing::{EnumPrintersW, PRINTER_ENUM_LOCAL, PRINTER_INFO_2W};
-use windows::Win32::System::Memory::{
-    VirtualAlloc, VirtualFree, MEM_COMMIT, MEM_RELEASE, PAGE_READWRITE,
-};
 
 fn main() {
     let mut needed: u32 = 0;

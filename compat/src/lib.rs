@@ -11,7 +11,7 @@ pub fn to_wstring(value: &str) -> Vec<u16> {
 pub unsafe fn pwstr_to_string(ptr: PWSTR) -> String {
     use std::slice::from_raw_parts;
     let len = (0usize..)
-        .find(|&n| *ptr.0.offset(n as isize) == 0)
+        .find(|&n| *ptr.0.add(n) == 0)
         .expect("Couldn't find null terminator");
     let array: &[u16] = from_raw_parts(ptr.0, len);
     String::from_utf16_lossy(array)
