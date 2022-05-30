@@ -1,6 +1,7 @@
 [workspace]
 
 members = [
+    "compat",
     "cpp-interop",
     "enum-printer",
     "meminfo",

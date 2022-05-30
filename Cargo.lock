@@ -115,6 +115,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "compat"
+version = "0.1.0"
+dependencies = [
+ "windows",
+]
+
+[[package]]
 name = "cpp-interop"
 version = "0.1.0"
 dependencies = [
@@ -126,8 +133,8 @@ dependencies = [
 name = "enum-printer"
 version = "0.1.0"
 dependencies = [
- "libc",
- "winapi",
+ "compat",
+ "windows",
 ]
 
 [[package]]
