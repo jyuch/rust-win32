@@ -36,8 +36,8 @@ fn main() {
         );
 
         for it in arr {
-            let name = string_from_pwstr(it.pPrinterName).unwrap();
-            let driver = string_from_pwstr(it.pDriverName).unwrap();
+            let name = it.pPrinterName.to_string().unwrap();
+            let driver = it.pDriverName.to_string().unwrap();
             println!("Name:{} Driver:{}", name, driver);
         }
     }
