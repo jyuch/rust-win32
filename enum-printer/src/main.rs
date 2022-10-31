@@ -1,6 +1,3 @@
-use compat::string_from_pwstr;
-
-
 use windows::Win32::Graphics::Printing::{EnumPrintersW, PRINTER_ENUM_LOCAL, PRINTER_INFO_2W};
 
 fn main() {
