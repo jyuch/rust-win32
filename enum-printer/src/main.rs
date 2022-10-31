@@ -1,6 +1,6 @@
 use compat::string_from_pwstr;
-use std::alloc::{alloc, dealloc, Layout};
-use std::ptr::null_mut;
+
+
 use windows::Win32::Graphics::Printing::{EnumPrintersW, PRINTER_ENUM_LOCAL, PRINTER_INFO_2W};
 
 fn main() {
@@ -12,29 +12,26 @@ fn main() {
             PRINTER_ENUM_LOCAL,
             None,
             2,
-            null_mut(),
-            0,
+            None,
             &mut needed,
             &mut returned,
         );
     }
 
-    let layout = Layout::array::<u8>(needed as usize).expect("Failed to create layout.");
-
     unsafe {
-        let printer_enum_pointer = alloc(layout);
+        let mut printer_enum = vec![0; needed as usize];
+
         EnumPrintersW(
             PRINTER_ENUM_LOCAL,
             None,
             2,
-            printer_enum_pointer,
-            needed,
+            Some(printer_enum.as_mut_slice()),
             &mut needed,
             &mut returned,
         );
 
         let arr: &[PRINTER_INFO_2W] = std::slice::from_raw_parts(
-            printer_enum_pointer as *mut PRINTER_INFO_2W,
+            printer_enum.as_ptr() as *mut PRINTER_INFO_2W,
             returned as usize,
         );
 
@@ -43,7 +40,5 @@ fn main() {
             let driver = string_from_pwstr(it.pDriverName).unwrap();
             println!("Name:{} Driver:{}", name, driver);
         }
-
-        dealloc(printer_enum_pointer, layout);
     }
 }
