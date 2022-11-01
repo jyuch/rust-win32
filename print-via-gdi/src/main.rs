@@ -1,66 +1,100 @@
-use crate::compat::to_wstring;
-use winapi::_core::ptr::null_mut;
-use winapi::ctypes::{c_int, c_void};
-use winapi::shared::windef::{HDC, HFONT};
-use winapi::um::wingdi::{
-    CreateDCW, CreateFontW, DeleteDC, DeleteObject, EndDoc, EndPage, SelectObject, StartDocW,
-    StartPage, TextOutW, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DOCINFOW, FF_ROMAN, FW_BOLD,
-    OUT_DEFAULT_PRECIS, SHIFTJIS_CHARSET, VARIABLE_PITCH,
+use windows::core::PCWSTR;
+use windows::w;
+use windows::Win32::Graphics::Gdi::{
+    CreateDCW, CreateFontW, CreatedHDC, DeleteDC, Ellipse, GetDeviceCaps, GetTextMetricsW, LineTo,
+    MoveToEx, SelectObject, TextOutW, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_ROMAN, FW_BOLD,
+    GET_DEVICE_CAPS_INDEX, HORZRES, OUT_DEFAULT_PRECIS, SHIFTJIS_CHARSET, TEXTMETRICW,
+    VARIABLE_PITCH, VERTRES,
 };
+use windows::Win32::Storage::Xps::{EndDoc, EndPage, StartDocW, StartPage, DOCINFOW};
 
-mod compat;
-
-unsafe fn create_font(font_family: &str, font_height: u32) -> HFONT {
-    CreateFontW(
-        font_height as c_int,
-        0,
-        0,
-        0,
-        FW_BOLD,
-        0,
-        0,
-        0,
-        SHIFTJIS_CHARSET,
-        OUT_DEFAULT_PRECIS,
-        CLIP_DEFAULT_PRECIS,
-        DEFAULT_QUALITY,
-        VARIABLE_PITCH | FF_ROMAN,
-        to_wstring(font_family).as_ptr(),
-    )
-}
-
-fn print(printer_name: &str, driver_name: &str) {
-    let printer_name = to_wstring(printer_name);
-    let driver_name = to_wstring(driver_name);
-
-    let hdc: HDC = unsafe {
-        CreateDCW(
-            driver_name.as_ptr(),
-            printer_name.as_ptr(),
-            null_mut(),
-            null_mut(),
-        )
-    };
-
-    let mut doc_info = DOCINFOW::default();
-    doc_info.cbSize = std::mem::size_of::<DOCINFOW>() as c_int;
-    doc_info.lpszDocName = to_wstring("Print by rust").as_ptr();
-
-    let font = unsafe { create_font("ＭＳ ゴシック", 200) };
-
-    unsafe {
-        StartDocW(hdc, &mut doc_info);
-        StartPage(hdc);
-        SelectObject(hdc, font as *mut c_void);
-        TextOutW(hdc, 200, 200, to_wstring("テスト印刷").as_ptr(), 5);
-        EndPage(hdc);
-        EndDoc(hdc);
-    }
-
-    unsafe { DeleteObject(font as *mut c_void) };
-    unsafe { DeleteDC(hdc) };
-}
+use compat::to_wstring;
 
 fn main() {
-    print("Microsoft Print to PDF", "Microsoft Print To PDF");
+    unsafe {
+        // 物理プリンタに印刷する場合は、プリンタ名とドライバ名を良い感じに設定する。
+        let printer_name = w!("Microsoft Print To PDF");
+        let driver_name = w!("Microsoft Print To PDF");
+
+        let hdc = CreateDCW(driver_name, printer_name, None, None);
+
+        let mut doc_info = DOCINFOW::default();
+        doc_info.cbSize = std::mem::size_of::<DOCINFOW>() as i32;
+        doc_info.lpszDocName = PCWSTR(w!("Print by rust").as_ptr());
+
+        StartDocW(hdc, &doc_info);
+        StartPage(hdc);
+
+        let mut text_metric = TEXTMETRICW::default();
+
+        let font1 = CreateFontW(
+            200,
+            0,
+            0,
+            0,
+            FW_BOLD.0 as i32,
+            1,
+            1,
+            0,
+            SHIFTJIS_CHARSET.0.into(),
+            OUT_DEFAULT_PRECIS.0.into(),
+            CLIP_DEFAULT_PRECIS.0.into(),
+            DEFAULT_QUALITY.0.into(),
+            (VARIABLE_PITCH.0 | FF_ROMAN.0).into(),
+            None,
+        );
+
+        let font2 = CreateFontW(
+            200,
+            0,
+            3150,
+            0,
+            FW_BOLD.0 as i32,
+            0,
+            0,
+            0,
+            SHIFTJIS_CHARSET.0.into(),
+            OUT_DEFAULT_PRECIS.0.into(),
+            CLIP_DEFAULT_PRECIS.0.into(),
+            DEFAULT_QUALITY.0.into(),
+            (VARIABLE_PITCH.0 | FF_ROMAN.0).into(),
+            w!("HGP創英角ﾎﾟｯﾌﾟ体"),
+        );
+
+        GetTextMetricsW(hdc, &mut text_metric);
+        SelectObject(hdc, font1);
+        TextOutW(hdc, 200, 200, &*to_wstring("これはテスト印刷です"));
+        SelectObject(hdc, font2);
+        TextOutW(hdc, 300, 600, &*to_wstring("HGP創英角ﾎﾟｯﾌﾟ体"));
+
+        paint_bmp(hdc);
+
+        EndPage(hdc);
+        EndDoc(hdc);
+
+        DeleteDC(hdc);
+    }
+}
+
+fn paint_bmp(hdc: CreatedHDC) {
+    unsafe {
+        let wx = GetDeviceCaps(hdc, GET_DEVICE_CAPS_INDEX(HORZRES.0)) - 100;
+        let wy = GetDeviceCaps(hdc, GET_DEVICE_CAPS_INDEX(VERTRES.0)) - 100;
+
+        for i in 1000..wy {
+            if i % 200 == 0 {
+                MoveToEx(hdc, 100, i, None);
+                LineTo(hdc, wx, i);
+            }
+        }
+
+        for i in 100..wx {
+            if i % 200 == 0 {
+                MoveToEx(hdc, i, 1000, None);
+                LineTo(hdc, i, wy);
+            }
+        }
+
+        Ellipse(hdc, 1250, 1250, 1650, 1650);
+    }
 }

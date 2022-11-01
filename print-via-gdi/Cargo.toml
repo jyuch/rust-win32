@@ -5,5 +5,14 @@ authors = ["jyuch <jyuch@users.noreply.github.com>"]
 edition = "2021"
 
 [dependencies]
-libc = "0.2"
-winapi = { version = "0.3", features = ["std", "impl-default", "minwindef", "windef", "winuser", "winspool", "wingdi", ] }
+compat = { path = "../compat" }
+
+[dependencies.windows]
+version = "0.43.0"
+features = [
+    "Win32_Foundation",
+    "Win32_Graphics_Printing_PrintTicket",
+    "Win32_Graphics_Gdi",
+    "Win32_Security",
+    "Win32_Storage_Xps",
+]
