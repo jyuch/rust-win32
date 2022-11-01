@@ -4,5 +4,5 @@ version = "0.1.0"
 authors = ["jyuch <jyuch@users.noreply.github.com>"]
 edition = "2021"
 
-[dependencies]
-windows = { version = "0.43.0" }
+[dependencies.windows]
+version = "0.43.0"
