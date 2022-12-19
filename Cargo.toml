@@ -7,4 +7,5 @@ members = [
     "meminfo",
     "print-via-gdi",
     "show-message-box",
+    "icon-and-property",
 ]
