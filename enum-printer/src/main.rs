@@ -5,7 +5,7 @@ fn main() {
     let mut returned: u32 = 0;
 
     unsafe {
-        EnumPrintersW(
+        let _ = EnumPrintersW(
             PRINTER_ENUM_LOCAL,
             None,
             2,
@@ -18,7 +18,7 @@ fn main() {
     unsafe {
         let mut printer_enum = vec![0; needed as usize];
 
-        EnumPrintersW(
+        let _ = EnumPrintersW(
             PRINTER_ENUM_LOCAL,
             None,
             2,

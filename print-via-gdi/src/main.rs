@@ -1,9 +1,8 @@
-use windows::core::PCWSTR;
-use windows::w;
+use windows::core::{w, PCWSTR};
 use windows::Win32::Graphics::Gdi::{
-    CreateDCW, CreateFontW, CreatedHDC, DeleteDC, Ellipse, GetDeviceCaps, GetTextMetricsW, LineTo,
-    MoveToEx, SelectObject, TextOutW, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_ROMAN, FW_BOLD,
-    GET_DEVICE_CAPS_INDEX, HORZRES, OUT_DEFAULT_PRECIS, SHIFTJIS_CHARSET, TEXTMETRICW,
+    CreateDCW, CreateFontW, DeleteDC, Ellipse, GetDeviceCaps, GetTextMetricsW, LineTo, MoveToEx,
+    SelectObject, TextOutW, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_ROMAN, FW_BOLD,
+    GET_DEVICE_CAPS_INDEX, HDC, HORZRES, OUT_DEFAULT_PRECIS, SHIFTJIS_CHARSET, TEXTMETRICW,
     VARIABLE_PITCH, VERTRES,
 };
 use windows::Win32::Storage::Xps::{EndDoc, EndPage, StartDocW, StartPage, DOCINFOW};
@@ -76,7 +75,7 @@ fn main() {
     }
 }
 
-fn paint_bmp(hdc: CreatedHDC) {
+fn paint_bmp(hdc: HDC) {
     unsafe {
         let wx = GetDeviceCaps(hdc, GET_DEVICE_CAPS_INDEX(HORZRES.0)) - 100;
         let wy = GetDeviceCaps(hdc, GET_DEVICE_CAPS_INDEX(VERTRES.0)) - 100;

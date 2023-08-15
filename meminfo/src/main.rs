@@ -6,7 +6,7 @@ fn main() {
             dwLength: std::mem::size_of::<MEMORYSTATUSEX>() as u32,
             ..Default::default()
         };
-        GlobalMemoryStatusEx(&mut status);
+        let _ = GlobalMemoryStatusEx(&mut status);
 
         status
     };
