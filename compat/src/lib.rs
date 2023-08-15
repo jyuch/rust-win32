@@ -8,6 +8,9 @@ pub fn to_wstring(value: &str) -> Vec<u16> {
         .collect()
 }
 
+/// # Safety
+///
+/// ptr must NULL terminated.
 pub unsafe fn pwstr_to_string(ptr: PWSTR) -> String {
     use std::slice::from_raw_parts;
     let len = (0usize..)

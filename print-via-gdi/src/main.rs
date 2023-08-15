@@ -17,7 +17,11 @@ fn main() {
 
         let hdc = CreateDCW(driver_name, printer_name, None, None);
 
-        let mut doc_info = DOCINFOW::default();
+        let mut doc_info = DOCINFOW {
+            cbSize: std::mem::size_of::<DOCINFOW>() as i32,
+            lpszDocName: PCWSTR(w!("Print by rust").as_ptr()),
+            ..Default::default()
+        };
         doc_info.cbSize = std::mem::size_of::<DOCINFOW>() as i32;
         doc_info.lpszDocName = PCWSTR(w!("Print by rust").as_ptr());
 
@@ -62,9 +66,9 @@ fn main() {
 
         GetTextMetricsW(hdc, &mut text_metric);
         SelectObject(hdc, font1);
-        TextOutW(hdc, 200, 200, &*to_wstring("これはテスト印刷です"));
+        TextOutW(hdc, 200, 200, &to_wstring("これはテスト印刷です"));
         SelectObject(hdc, font2);
-        TextOutW(hdc, 300, 600, &*to_wstring("HGP創英角ﾎﾟｯﾌﾟ体"));
+        TextOutW(hdc, 300, 600, &to_wstring("HGP創英角ﾎﾟｯﾌﾟ体"));
 
         paint_bmp(hdc);
 
