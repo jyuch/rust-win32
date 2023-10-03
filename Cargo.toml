@@ -11,3 +11,9 @@ members = [
     "show-message-box",
     "icon-and-property",
 ]
+
+[workspace.dependencies]
+windows = "0.51"
+bindgen = "0.66"
+cc = "1.0"
+winres = "0.1"

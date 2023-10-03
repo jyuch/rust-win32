@@ -7,4 +7,4 @@ build = "build.rs"
 [dependencies]
 
 [target.'cfg(windows)'.build-dependencies]
-winres = "0.1"
+winres = { workspace = true }
