@@ -14,6 +14,6 @@ members = [
 
 [workspace.dependencies]
 windows = "0.51"
-bindgen = "0.66"
+bindgen = "0.68"
 cc = "1.0"
 winres = "0.1"
