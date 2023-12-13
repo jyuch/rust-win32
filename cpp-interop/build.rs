@@ -1,6 +1,3 @@
-extern crate bindgen;
-extern crate cc;
-
 use std::env;
 use std::path::PathBuf;
 
@@ -16,7 +13,7 @@ fn main() {
 
     let bindings = bindgen::Builder::default()
         .header("src/dog.hpp")
-        .parse_callbacks(Box::new(bindgen::CargoCallbacks))
+        .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
         .generate()
         .expect("Unable to generate bindings");
 
