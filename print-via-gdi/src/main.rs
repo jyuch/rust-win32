@@ -64,18 +64,18 @@ fn main() {
             w!("HGP創英角ﾎﾟｯﾌﾟ体"),
         );
 
-        GetTextMetricsW(hdc, &mut text_metric);
+        let _ = GetTextMetricsW(hdc, &mut text_metric);
         SelectObject(hdc, font1);
-        TextOutW(hdc, 200, 200, &to_wstring("これはテスト印刷です"));
+        let _ = TextOutW(hdc, 200, 200, &to_wstring("これはテスト印刷です"));
         SelectObject(hdc, font2);
-        TextOutW(hdc, 300, 600, &to_wstring("HGP創英角ﾎﾟｯﾌﾟ体"));
+        let _ = TextOutW(hdc, 300, 600, &to_wstring("HGP創英角ﾎﾟｯﾌﾟ体"));
 
         paint_bmp(hdc);
 
         EndPage(hdc);
         EndDoc(hdc);
 
-        DeleteDC(hdc);
+        let _ = DeleteDC(hdc);
     }
 }
 
@@ -86,18 +86,18 @@ fn paint_bmp(hdc: HDC) {
 
         for i in 1000..wy {
             if i % 200 == 0 {
-                MoveToEx(hdc, 100, i, None);
-                LineTo(hdc, wx, i);
+                let _ = MoveToEx(hdc, 100, i, None);
+                let _ = LineTo(hdc, wx, i);
             }
         }
 
         for i in 100..wx {
             if i % 200 == 0 {
-                MoveToEx(hdc, i, 1000, None);
-                LineTo(hdc, i, wy);
+                let _ = MoveToEx(hdc, i, 1000, None);
+                let _ = LineTo(hdc, i, wy);
             }
         }
 
-        Ellipse(hdc, 1250, 1250, 1650, 1650);
+        let _ = Ellipse(hdc, 1250, 1250, 1650, 1650);
     }
 }
