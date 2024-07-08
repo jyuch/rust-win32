@@ -13,7 +13,7 @@ members = [
 ]
 
 [workspace.dependencies]
-windows = "0.57"
+windows = "0.58"
 bindgen = "0.69"
 cc = "1.0"
 winres = "0.1"
