@@ -27,6 +27,10 @@ fn main() {
             &mut returned,
         );
 
+        if returned == 0 {
+            return;
+        }
+
         let arr: &[PRINTER_INFO_2W] = std::slice::from_raw_parts(
             printer_enum.as_ptr() as *mut PRINTER_INFO_2W,
             returned as usize,
